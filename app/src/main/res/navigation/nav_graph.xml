@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/ConnectFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.example.smarthomemqtt.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        android:id="@+id/ConnectFragment"
+        android:name="com.example.smarthomemqtt.ConnectFragment"
+        android:label="Connection Fragement"
+        tools:layout="@layout/fragment_connect">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_ConnectFragment_to_ManageFragment"
+            app:destination="@id/ManageFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.smarthomemqtt.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/ManageFragment"
+        android:name="com.example.smarthomemqtt.ManageFragment"
+        android:label="Manage Fragment"
+        tools:layout="@layout/fragment_manage">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_ManageFragment_to_ConnectFragment"
+            app:destination="@id/ConnectFragment" />
     </fragment>
 </navigation>

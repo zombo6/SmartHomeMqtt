@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ManageFragment">
+
+    <TextView
+        android:id="@+id/textView_pubtopic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Topic"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edittext_pubtopic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:autofillHints="Topic"
+        android:ems="15"
+        android:hint="topic"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_pubtopic" />
+
+    <TextView
+        android:id="@+id/textview_pubmsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Message"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edittext_pubtopic" />
+
+    <EditText
+        android:id="@+id/edittext_pubmsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:autofillHints="Message"
+        android:ems="15"
+        android:hint="Message"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textview_pubmsg" />
+
+    <Button
+        android:id="@+id/button_publish"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Publish"
+        app:layout_constraintEnd_toEndOf="@+id/edittext_pubmsg"
+        app:layout_constraintStart_toStartOf="@+id/edittext_pubmsg"
+        app:layout_constraintTop_toBottomOf="@+id/edittext_pubmsg" />
+
+
+    <TextView
+        android:id="@+id/textview_subtopic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Topic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_publish" />
+
+
+    <EditText
+        android:id="@+id/edittext_subtopic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:autofillHints="Topic"
+        android:ems="15"
+        android:hint="Topic"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textview_subtopic" />
+
+    <Button
+        android:id="@+id/button_subscribe"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Subscribe"
+        app:layout_constraintEnd_toStartOf="@+id/button_unsubscribe"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/edittext_subtopic"
+        app:layout_constraintTop_toBottomOf="@+id/edittext_subtopic" />
+
+    <Button
+        android:id="@+id/button_unsubscribe"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Unsubscribe"
+        app:layout_constraintEnd_toEndOf="@+id/edittext_subtopic"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button_subscribe"
+        app:layout_constraintTop_toBottomOf="@+id/edittext_subtopic" />
+
+
+    <Button
+        android:id="@+id/button_clean_client"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="75dp"
+        android:layout_marginBottom="16dp"
+        android:text="Clean"
+        app:layout_constraintBottom_toTopOf="@+id/button_prefill_client"
+        app:layout_constraintEnd_toEndOf="@+id/button_unsubscribe"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/button_subscribe"
+        app:layout_constraintTop_toBottomOf="@+id/button_subscribe"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/button_prefill_client"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Prefiil"
+        app:layout_constraintBottom_toTopOf="@+id/button_disconnect"
+        app:layout_constraintEnd_toEndOf="@+id/button_unsubscribe"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/button_subscribe"
+        app:layout_constraintTop_toBottomOf="@+id/button_subscribe"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/button_disconnect"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Disconnect"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/button_unsubscribe"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/button_subscribe" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+<!--    <Button-->
+<!--        android:id="@+id/button_clean"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:text="Clean"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/button_prefill"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/edittext_password"-->
+<!--        app:layout_constraintHorizontal_bias="1.0"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/edittext_password"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/edittext_password"-->
+<!--        app:layout_constraintVertical_bias="0.0" />-->
+
+<!--    <Button-->
+<!--            android:id="@+id/button_prefill"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="16dp"-->
+<!--            android:text="Prefill"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/button_connect"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/edittext_password"-->
+<!--            app:layout_constraintHorizontal_bias="0.0"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/edittext_password" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/button_connect"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="32dp"-->
+<!--            android:text="Connect"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/edittext_password"-->
+<!--            app:layout_constraintHorizontal_bias="0.566"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/edittext_password" />-->
+
+<!--        <EditText-->
+<!--        android:id="@+id/edittext_server_uri"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="32dp"-->
+<!--        android:layout_marginLeft="32dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginEnd="32dp"-->
+<!--        android:layout_marginRight="32dp"-->
+<!--        android:autofillHints=""-->
+<!--        android:ems="15"-->
+<!--        android:hint="server url"-->
+<!--        android:inputType="text"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.445"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textview_server_uri"-->
+<!--        tools:ignore="TextFields" />-->
+
+<!--        <EditText-->
+<!--        android:id="@+id/edittext_client_id"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="32dp"-->
+<!--        android:layout_marginLeft="32dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginEnd="32dp"-->
+<!--        android:layout_marginRight="32dp"-->
+<!--        android:autofillHints=""-->
+<!--        android:ems="15"-->
+<!--        android:hint="@string/client_id"-->
+<!--        android:inputType="text"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.45"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textview_client_id"-->
+<!--        tools:ignore="TextFields" />-->
+
+<!--        <EditText-->
+<!--        android:id="@+id/edittext_username"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="32dp"-->
+<!--        android:layout_marginLeft="32dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginEnd="32dp"-->
+<!--        android:layout_marginRight="32dp"-->
+<!--        android:autofillHints=""-->
+<!--        android:ems="15"-->
+<!--        android:hint="username"-->
+<!--        android:inputType="text"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textview_username"-->
+<!--        tools:ignore="TextFields" />-->
+
+<!--        <EditText-->
+<!--        android:id="@+id/edittext_password"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="32dp"-->
+<!--        android:layout_marginLeft="32dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginEnd="32dp"-->
+<!--        android:layout_marginRight="32dp"-->
+<!--        android:autofillHints=""-->
+<!--        android:ems="15"-->
+<!--        android:hint="password"-->
+<!--        android:inputType="textPassword"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textview_password"-->
+<!--        tools:ignore="TextFields" />-->
+
+<!--        <TextView-->
+<!--        android:id="@+id/textview_server_uri"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="32dp"-->
+<!--        android:text="server url"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--        <TextView-->
+<!--        android:id="@+id/textview_client_id"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Client Id"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/edittext_server_uri" />-->
+
+<!--        <TextView-->
+<!--        android:id="@+id/textview_username"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Username"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/edittext_client_id" />-->
+
+<!--        <TextView-->
+<!--        android:id="@+id/textview_password"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Password"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/edittext_username" />-->
+
