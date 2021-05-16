@@ -9,16 +9,109 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.fasterxml.jackson.databind.DeserializationFeature
 import org.eclipse.paho.client.mqttv3.*
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+
+
+
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
+
+data class RootData(
+    //@JsonProperty("Node")
+    val NodeData: NodeData,
+    //@JsonProperty("Switch")
+    val SwitchData: MutableList<SwitchData>
+)
+
+data class NodeData(
+    val nodeId: Long,
+    val time: Int
+)
+data class SwitchData(
+    val key: String,
+    val value: Int
+)
+
 class ManageFragment : Fragment() {
     private lateinit var MqttClient: MQTTClient
     private lateinit var connectToken: IMqttToken
+
+    public fun handleMessages(_message: String, _topic: String)// Obsługa zdarzeń na podstawie otrzymanej wiadomości
+    {
+        if(_topic == "painlessMesh/from/gateway")
+        {
+            //tutaj przejście do next ekranu z parametrami nodeów przekazywanymi, przygotowanie w pętli do przekzania SETA
+
+            val _nodeslist: List<String> = _message.split("_")
+            val nodesData = bundleOf(MQTT_NODES_KEY to _nodeslist )
+            findNavController().navigate(R.id.action_ConnectFragment_to_ManageFragment,nodesData )
+
+        }
+
+    }
+
+    public fun deserializeJson(_message: String)
+    {
+        //val json3  = """{"NodeData":{"nodeId":3186720073,"time":12},"SwitchData":[{"key":"Switch0","value":1},{"key":"Switch1","value":1},{"key":"Switch2","value":1},{"key":"Switch3","value":1}]}"""
+        val mapper = jacksonObjectMapper()
+        mapper.configure( DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true )
+
+        val RootData: RootData = mapper.readValue<RootData>("""_message""")
+
+        val switchlist : List<SwitchData> = RootData.SwitchData // Odczytanie obiektu Switchy
+        for(element in switchlist){//iteracja po switchach i odczytanie ich wartości
+            println(element)
+        }
+        println(RootData.NodeData)//Odczytanie wartości Node'a
+    }
+
+
+    public fun convert(){
+
+        val mapper = jacksonObjectMapper()
+        mapper.configure( DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true )
+
+        val json3  = """{"NodeData":{"nodeId":3186720073,"time":12},"SwitchData":[{"key":"Switch0","value":1},{"key":"Switch1","value":1},{"key":"Switch2","value":1},{"key":"Switch3","value":1}]}"""
+        val testdata: RootData = mapper.readValue<RootData>(json3)
+
+        val switchlist : List<SwitchData> = testdata.SwitchData // Odczytanie obiektu Switchy
+        for(element in switchlist){//iteracja po switchach i odczytanie ich wartości
+            println(element)
+        }
+        println(testdata.NodeData)//Odczytanie wartości Node'a
+
+
+        println("Json creation start: ---- ")//Tworzenie Odpowiedzi
+
+        val SwitchListResponse = mutableListOf<SwitchData>() // i takie coś mozna cyknąc w pętle pewnie
+        SwitchListResponse.add(SwitchData("Switch0",0))
+        SwitchListResponse.add(SwitchData("Switch1",1))
+        SwitchListResponse.add(SwitchData("Switch2",0))
+        SwitchListResponse.add(SwitchData("Switch3",1))
+        val JsonSwitchListArray = mapper.writeValueAsString(SwitchListResponse)
+        println(JsonSwitchListArray)
+
+        val NodeResponse = NodeData(testdata.NodeData.nodeId, 1234) // Przepisuje wartość id node i nadaje czas
+        println(NodeResponse)
+
+        val WholeJsonResponse = RootData(NodeResponse,SwitchListResponse)// Tworzę całą odpowiedź
+        println(WholeJsonResponse)
+
+        println(mapper.writeValueAsString(WholeJsonResponse))
+
+
+        println("Json creation stop: ---- ")
+
+
+}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,6 +209,12 @@ class ManageFragment : Fragment() {
                         Log.d(this.javaClass.name, msg)
 
                         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                            //tutaj dodajemy obsługe JSONA otrzymanego-----------------------------------//
+                        handleMessages(message.toString(),topic.toString())
+                        //convert()
+
+
+
                     }
 
                     override fun connectionLost(cause: Throwable?) {

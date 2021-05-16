@@ -1,7 +1,11 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlinx-serialization'
+   // id 'org.jetbrains.kotlin.multiplatform' version '1.5.0'
+    //id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.0'
 }
+
 
 android {
     compileSdkVersion 30
@@ -13,6 +17,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -48,4 +53,8 @@ dependencies {
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.4'
     implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
+    implementation 'wu.seal.jsontokotlin:library:3.6.1'
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.12.+"
+    implementation 'com.android.support:multidex:1.0.3'
 }
