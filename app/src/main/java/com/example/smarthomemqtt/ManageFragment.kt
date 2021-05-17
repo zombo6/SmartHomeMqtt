@@ -39,23 +39,20 @@ data class SwitchData(
     val key: String,
     val value: Int
 )
-
+ lateinit var MqttClient: MQTTClient
 class ManageFragment : Fragment() {
-    private lateinit var MqttClient: MQTTClient
+    //private lateinit var MqttClient: MQTTClient
     private lateinit var connectToken: IMqttToken
 
     public fun handleMessages(_message: String, _topic: String)// Obsługa zdarzeń na podstawie otrzymanej wiadomości
     {
         if(_topic == "painlessMesh/from/gateway")
-        {
-            //tutaj przejście do next ekranu z parametrami nodeów przekazywanymi, przygotowanie w pętli do przekzania SETA
+        {//tutaj przejście do next ekranu z parametrami nodeów przekazywanymi, przygotowanie w pętli do przekzania SETA
 
-            val _nodeslist: List<String> = _message.split("_")
-            val nodesData = bundleOf(MQTT_NODES_KEY to _nodeslist )
-            findNavController().navigate(R.id.action_ConnectFragment_to_ManageFragment,nodesData )
-
+            val _nodeslist: List<String> = _message.split(" ")
+            val nodesData = bundleOf(MQTT_NODES_KEY to ArrayList(_nodeslist))
+            findNavController().navigate(R.id.action_ManageFragment_to_NodeSelection,nodesData )
         }
-
     }
 
     public fun deserializeJson(_message: String)

@@ -13,4 +13,4 @@ const val MQTT_PWD              = ""
 const val MQTT_TEST_TOPIC       = "painlessMesh/to/gateway"
 const val MQTT_TEST_MSG         = "getNodes"
 
-const val MQTT_NODES_KEY        = "MQTT_NODES"
+const val   MQTT_NODES_KEY        = "MQTT_NODES"

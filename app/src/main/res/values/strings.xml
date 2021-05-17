@@ -14,4 +14,6 @@
     <string name="client_id">Client Id</string>
     <string name="default_values">Default Values</string>
     <string name="connect">Connect</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
