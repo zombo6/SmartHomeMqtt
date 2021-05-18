@@ -2,6 +2,7 @@ package com.example.smarthomemqtt
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 
@@ -93,6 +94,9 @@ class MQTTClient(context: Context?,
         return this.connectToken
 
     }
+    fun getmqttClient(): MqttAndroidClient{
+        return this.mqttClient
+    }
 
 
     fun subscribe(topic:        String,
@@ -104,6 +108,9 @@ class MQTTClient(context: Context?,
             e.printStackTrace()
         }
     }
+
+
+
 
     fun unsubscribe(topic:          String,
                     cbUnsubscribe:  IMqttActionListener = defaultCbUnsubscribe) {

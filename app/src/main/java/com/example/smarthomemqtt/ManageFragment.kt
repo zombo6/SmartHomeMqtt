@@ -53,6 +53,7 @@ class ManageFragment : Fragment() {
             val nodesData = bundleOf(MQTT_NODES_KEY to ArrayList(_nodeslist))
             findNavController().navigate(R.id.action_ManageFragment_to_NodeSelection,nodesData )
         }
+
     }
 
     public fun deserializeJson(_message: String)
@@ -106,8 +107,6 @@ class ManageFragment : Fragment() {
 
 
         println("Json creation stop: ---- ")
-
-
 }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -153,7 +152,6 @@ class ManageFragment : Fragment() {
         val clientId = arguments?.getString(MQTT_CLIENT_ID_KEY)
         val username = ""
         val pwd = ""
-
 
         // Check if passed arguments are valid
         if (serverUrl != null &&
@@ -209,8 +207,6 @@ class ManageFragment : Fragment() {
                             //tutaj dodajemy obsługe JSONA otrzymanego-----------------------------------//
                         handleMessages(message.toString(),topic.toString())
                         //convert()
-
-
 
                     }
 

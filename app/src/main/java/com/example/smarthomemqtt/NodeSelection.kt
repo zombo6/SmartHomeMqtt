@@ -1,6 +1,7 @@
 package com.example.smarthomemqtt
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import org.eclipse.paho.android.service.MqttAndroidClient
+import org.eclipse.paho.client.mqttv3.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -78,7 +81,9 @@ class NodeSelection : Fragment() {
                 button.setPadding(50, 20, 50, 20)
 
                 button.setOnClickListener {
-                    Toast.makeText(context, "Nacisnieto przycisk $buttonText", Toast.LENGTH_LONG).show()
+                    //Toast.makeText(context, "Nacisnieto przycisk $buttonText", Toast.LENGTH_SHORT).show()
+                    getNodeInfo(buttonText)
+                    createSwitchControl()
                 }
                 button.setLayoutParams(params)
 
@@ -87,9 +92,85 @@ class NodeSelection : Fragment() {
                 }
             }
         }
+    }
+    fun createSwitchControl(){
+        val mqttClient = MqttClient.getmqttClient()
+        mqttClient.setCallback(object : MqttCallback {
+            override fun messageArrived(topic: String?, message: MqttMessage?) {
+                val msg =
+                    "Dupa1234"
+                Log.d(this.javaClass.name, msg)
 
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                //tutaj dodajemy obsługe JSONA otrzymanego-----------------------------------//
+                //handleMessages(message.toString(),topic.toString())
+                //convert()
+
+            }
+
+            override fun connectionLost(cause: Throwable?) {
+                Log.d(this.javaClass.name, "Connection lost ${cause.toString()}")
+            }
+
+            override fun deliveryComplete(token: IMqttDeliveryToken?) {
+                Log.d(this.javaClass.name, "Delivery complete")
+            }
+//                            override fun connectComplete(reconnect: Boolean?, serverURI: String?) {
+//                                getNodesMQTTGateway()
+//                            }
+        })
+
+    }
+
+
+
+    fun getNodeInfo(nodeId: String?,_message: String = "getSwitchStatus" ) {
+        //tutaj subscribe
+        val topic_from = "painlessMesh/from/" + nodeId;
+        val topic_to = "painlessMesh/to/" + nodeId;
         if (MqttClient.isConnected()) {
-            Toast.makeText(context, "Mamy zmienna ", Toast.LENGTH_LONG).show()
+            MqttClient.subscribe(topic_from,
+                1,
+                object : IMqttActionListener {
+                    override fun onSuccess(asyncActionToken: IMqttToken?) {
+                        val msg = "Subscribed to node, $topic_from trying node info: "
+                        Log.d(this.javaClass.name, msg)
+                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                        Log.d(this.javaClass.name, "Failed to subscribe: $topic_from")
+                    }
+
+                })
+
+
+
+            MqttClient.publish(topic_to,
+                _message,
+                1,
+                false,
+                object : IMqttActionListener {
+                    override fun onSuccess(asyncActionToken: IMqttToken?) {
+                        val msg = "Publish message: $_message to topic: $topic_to"
+                        Log.d(this.javaClass.name, msg)
+                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onFailure(
+                        asyncActionToken: IMqttToken?,
+                        exception: Throwable?
+                    ) {
+                        Log.d(this.javaClass.name, "Failed to publish message to topic")
+                    }
+                })
+        } else {
+            Log.d(this.javaClass.name, "Impossible to subscribe and publish, no server connected")
+            Toast.makeText(
+                context,
+                "Impossible to subscribe and publish, no server connected",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
