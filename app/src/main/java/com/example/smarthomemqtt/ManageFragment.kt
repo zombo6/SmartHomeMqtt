@@ -24,21 +24,21 @@ import com.fasterxml.jackson.module.kotlin.readValue
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 
-data class RootData(
-    //@JsonProperty("Node")
-    val NodeData: NodeData,
-    //@JsonProperty("Switch")
-    val SwitchData: MutableList<SwitchData>
-)
-
-data class NodeData(
-    val nodeId: Long,
-    val time: Int
-)
-data class SwitchData(
-    val key: String,
-    val value: Int
-)
+//data class RootData(
+//    //@JsonProperty("Node")
+//    val NodeData: NodeData,
+//    //@JsonProperty("Switch")
+//    val SwitchData: MutableList<SwitchData>
+//)
+//
+//data class NodeData(
+//    val nodeId: Long,
+//    val time: Int
+//)
+//data class SwitchData(
+//    val key: String,
+//    val value: Int
+//)
  lateinit var MqttClient: MQTTClient
 class ManageFragment : Fragment() {
     //private lateinit var MqttClient: MQTTClient
@@ -56,58 +56,58 @@ class ManageFragment : Fragment() {
 
     }
 
-    public fun deserializeJson(_message: String)
-    {
-        //val json3  = """{"NodeData":{"nodeId":3186720073,"time":12},"SwitchData":[{"key":"Switch0","value":1},{"key":"Switch1","value":1},{"key":"Switch2","value":1},{"key":"Switch3","value":1}]}"""
-        val mapper = jacksonObjectMapper()
-        mapper.configure( DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true )
-
-        val RootData: RootData = mapper.readValue<RootData>("""_message""")
-
-        val switchlist : List<SwitchData> = RootData.SwitchData // Odczytanie obiektu Switchy
-        for(element in switchlist){//iteracja po switchach i odczytanie ich wartości
-            println(element)
-        }
-        println(RootData.NodeData)//Odczytanie wartości Node'a
-    }
-
-
-    public fun convert(){
-
-        val mapper = jacksonObjectMapper()
-        mapper.configure( DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true )
-
-        val json3  = """{"NodeData":{"nodeId":3186720073,"time":12},"SwitchData":[{"key":"Switch0","value":1},{"key":"Switch1","value":1},{"key":"Switch2","value":1},{"key":"Switch3","value":1}]}"""
-        val testdata: RootData = mapper.readValue<RootData>(json3)
-
-        val switchlist : List<SwitchData> = testdata.SwitchData // Odczytanie obiektu Switchy
-        for(element in switchlist){//iteracja po switchach i odczytanie ich wartości
-            println(element)
-        }
-        println(testdata.NodeData)//Odczytanie wartości Node'a
+//    public fun deserializeJson(_message: String)
+//    {
+//        //val json3  = """{"NodeData":{"nodeId":3186720073,"time":12},"SwitchData":[{"key":"Switch0","value":1},{"key":"Switch1","value":1},{"key":"Switch2","value":1},{"key":"Switch3","value":1}]}"""
+//        val mapper = jacksonObjectMapper()
+//        mapper.configure( DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true )
+//
+//        val RootData: RootData = mapper.readValue<RootData>("""_message""")
+//
+//        val switchlist : List<SwitchData> = RootData.SwitchData // Odczytanie obiektu Switchy
+//        for(element in switchlist){//iteracja po switchach i odczytanie ich wartości
+//            println(element)
+//        }
+//        println(RootData.NodeData)//Odczytanie wartości Node'a
+//    }
 
 
-        println("Json creation start: ---- ")//Tworzenie Odpowiedzi
-
-        val SwitchListResponse = mutableListOf<SwitchData>() // i takie coś mozna cyknąc w pętle pewnie
-        SwitchListResponse.add(SwitchData("Switch0",0))
-        SwitchListResponse.add(SwitchData("Switch1",1))
-        SwitchListResponse.add(SwitchData("Switch2",0))
-        SwitchListResponse.add(SwitchData("Switch3",1))
-        val JsonSwitchListArray = mapper.writeValueAsString(SwitchListResponse)
-        println(JsonSwitchListArray)
-
-        val NodeResponse = NodeData(testdata.NodeData.nodeId, 1234) // Przepisuje wartość id node i nadaje czas
-        println(NodeResponse)
-
-        val WholeJsonResponse = RootData(NodeResponse,SwitchListResponse)// Tworzę całą odpowiedź
-        println(WholeJsonResponse)
-
-        println(mapper.writeValueAsString(WholeJsonResponse))
-
-
-        println("Json creation stop: ---- ")
-}
+//    public fun convert(){
+//
+//        val mapper = jacksonObjectMapper()
+//        mapper.configure( DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true )
+//
+//        val json3  = """{"NodeData":{"nodeId":3186720073,"time":12},"SwitchData":[{"key":"Switch0","value":1},{"key":"Switch1","value":1},{"key":"Switch2","value":1},{"key":"Switch3","value":1}]}"""
+//        val testdata: RootData = mapper.readValue<RootData>(json3)
+//
+//        val switchlist : List<SwitchData> = testdata.SwitchData // Odczytanie obiektu Switchy
+//        for(element in switchlist){//iteracja po switchach i odczytanie ich wartości
+//            println(element)
+//        }
+//        println(testdata.NodeData)//Odczytanie wartości Node'a
+//
+//
+//        println("Json creation start: ---- ")//Tworzenie Odpowiedzi
+//
+//        val SwitchListResponse = mutableListOf<SwitchData>() // i takie coś mozna cyknąc w pętle pewnie
+//        SwitchListResponse.add(SwitchData("Switch0",0))
+//        SwitchListResponse.add(SwitchData("Switch1",1))
+//        SwitchListResponse.add(SwitchData("Switch2",0))
+//        SwitchListResponse.add(SwitchData("Switch3",1))
+//        val JsonSwitchListArray = mapper.writeValueAsString(SwitchListResponse)
+//        println(JsonSwitchListArray)
+//
+//        val NodeResponse = NodeData(testdata.NodeData.nodeId, 1234) // Przepisuje wartość id node i nadaje czas
+//        println(NodeResponse)
+//
+//        val WholeJsonResponse = RootData(NodeResponse,SwitchListResponse)// Tworzę całą odpowiedź
+//        println(WholeJsonResponse)
+//
+//        println(mapper.writeValueAsString(WholeJsonResponse))
+//
+//
+//        println("Json creation stop: ---- ")
+//}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

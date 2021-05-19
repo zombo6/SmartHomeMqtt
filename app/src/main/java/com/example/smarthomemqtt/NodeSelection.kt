@@ -12,6 +12,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 
@@ -26,11 +29,39 @@ private const val ARG_PARAM2 = "param2"
  * Use the [NodeSelection.newInstance] factory method to
  * create an instance of this fragment.
  */
+data class RootData(
+    //@JsonProperty("Node")
+    val NodeData: NodeData,
+    //@JsonProperty("Switch")
+    val SwitchData: MutableList<SwitchData>
+)
+
+data class NodeData(
+    val nodeId: Long,
+    val time: Int
+)
+data class SwitchData(
+    val key: String,
+    val value: Int
+)
+
+
+
 
 class NodeSelection : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var viewInt: View
+
+    fun setView(_view: View)
+    {
+        viewInt = _view
+    }
+     fun  getView2() :View
+    {
+        return viewInt
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +92,7 @@ class NodeSelection : Fragment() {
             arguments?.getStringArrayList(MQTT_NODES_KEY) as ArrayList<String?>
 
         val linear_layoutButton = view.findViewById<LinearLayout>(R.id.linear_layoutButton)
+        setView(view)
         //val linear_layoutButton = requireView().findViewById<LinearLayout>(R.id.linear_layoutButton)
 
         for (element in (_nodeslist.indices))//iteracja po switchach i odczytanie ich wartości
@@ -93,21 +125,21 @@ class NodeSelection : Fragment() {
             }
         }
     }
+
     fun createSwitchControl(){
         val mqttClient = MqttClient.getmqttClient()
         mqttClient.setCallback(object : MqttCallback {
             override fun messageArrived(topic: String?, message: MqttMessage?) {
-                val msg =
-                    "Dupa1234"
+                val msg = "Dupa1234"
                 Log.d(this.javaClass.name, msg)
-
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+
+                deserializeJson(message.toString())
+
                 //tutaj dodajemy obsługe JSONA otrzymanego-----------------------------------//
                 //handleMessages(message.toString(),topic.toString())
                 //convert()
-
             }
-
             override fun connectionLost(cause: Throwable?) {
                 Log.d(this.javaClass.name, "Connection lost ${cause.toString()}")
             }
@@ -119,9 +151,7 @@ class NodeSelection : Fragment() {
 //                                getNodesMQTTGateway()
 //                            }
         })
-
     }
-
 
 
     fun getNodeInfo(nodeId: String?,_message: String = "getSwitchStatus" ) {
@@ -172,6 +202,10 @@ class NodeSelection : Fragment() {
                 Toast.LENGTH_SHORT
             ).show()
         }
+
+
+
+
     }
 
 
@@ -195,4 +229,56 @@ class NodeSelection : Fragment() {
                 }
             }
     }
+    fun deserializeJson(_message: String)
+    {
+        val linear_SwitchList = view?.findViewById<LinearLayout>(R.id.linear_SwitchList)
+        var iter: Int = 0
+        val view: (NodeSelection) -> View? = NodeSelection::getView
+        //val json3  = """{"NodeData":{"nodeId":3186720073,"time":12},"SwitchData":[{"key":"Switch0","value":1},{"key":"Switch1","value":1},{"key":"Switch2","value":1},{"key":"Switch3","value":1}]}"""
+        val mapper = jacksonObjectMapper()
+        mapper.configure( DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true )
+
+        val RootData: RootData = mapper.readValue<RootData>("""$_message""")
+
+        println(RootData.NodeData)//Odczytanie wartości Node'a
+
+
+
+        val switchlist : List<SwitchData> = RootData.SwitchData // Odczytanie obiektu Switchy
+        for(element in switchlist){//iteracja po switchach i odczytanie ich wartości
+            println(element)
+
+            val buttonText: String? = element.toString()
+            val button = Button(context)
+            button.setId(iter + 1)
+            val params = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+             )
+                    params.setMargins(50, 10, 50, 10)
+                    button.setText("Sw: $buttonText")
+                    button.setPadding(50, 20, 50, 20)
+
+                    button.setOnClickListener {
+                        Toast.makeText(context, "Nacisnieto przycisk $buttonText", Toast.LENGTH_SHORT).show()
+                        //getNodeInfo(buttonText)
+                        //createSwitchControl()
+                    }
+                    button.setLayoutParams(params)
+
+                    if (linear_SwitchList != null) {
+                        linear_SwitchList.addView(button)
+                    }
+
+            iter+=1
+        }
+
+
+
+
+    }
+
+
+
+
 }
