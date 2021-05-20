@@ -2,11 +2,13 @@ package com.example.smarthomemqtt
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -31,18 +33,18 @@ private const val ARG_PARAM2 = "param2"
  */
 data class RootData(
     //@JsonProperty("Node")
-    val NodeData: NodeData,
+    val nodeData: nodeData,
     //@JsonProperty("Switch")
-    val SwitchData: MutableList<SwitchData>
+    val switchData: MutableList<switchData>
 )
 
-data class NodeData(
+data class nodeData(
     val nodeId: Long,
     val time: Int
 )
-data class SwitchData(
+data class switchData(
     val key: String,
-    val value: Int
+    var value: Int
 )
 
 
@@ -53,6 +55,7 @@ class NodeSelection : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var viewInt: View
+    private var messageKeep: String? = null
 
     fun setView(_view: View)
     {
@@ -61,6 +64,15 @@ class NodeSelection : Fragment() {
      fun  getView2() :View
     {
         return viewInt
+    }
+    fun setMsg(_msg: String?)
+    {
+        messageKeep = _msg
+    }
+
+    fun getMsg(): String?
+    {
+        return messageKeep
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -130,9 +142,9 @@ class NodeSelection : Fragment() {
         val mqttClient = MqttClient.getmqttClient()
         mqttClient.setCallback(object : MqttCallback {
             override fun messageArrived(topic: String?, message: MqttMessage?) {
-                val msg = "Dupa1234"
-                Log.d(this.javaClass.name, msg)
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                //val msg = "Dupa1234"
+                //Log.d(this.javaClass.name, msg)
+                //oast.makeText(context, msg, Toast.LENGTH_SHORT).show()
 
                 deserializeJson(message.toString())
 
@@ -174,8 +186,6 @@ class NodeSelection : Fragment() {
 
                 })
 
-
-
             MqttClient.publish(topic_to,
                 _message,
                 1,
@@ -202,13 +212,7 @@ class NodeSelection : Fragment() {
                 Toast.LENGTH_SHORT
             ).show()
         }
-
-
-
-
     }
-
-
 
     companion object {
         /**
@@ -240,45 +244,99 @@ class NodeSelection : Fragment() {
 
         val RootData: RootData = mapper.readValue<RootData>("""$_message""")
 
-        println(RootData.NodeData)//Odczytanie wartości Node'a
+        println(RootData.nodeData)//Odczytanie wartości Node'a
+        if(RootData.nodeData != null)
+        {
+            setMsg(_message)
+        }
 
 
-
-        val switchlist : List<SwitchData> = RootData.SwitchData // Odczytanie obiektu Switchy
+        val switchlist : List<switchData> = RootData.switchData // Odczytanie obiektu Switchy
         for(element in switchlist){//iteracja po switchach i odczytanie ich wartości
+
             println(element)
 
-            val buttonText: String? = element.toString()
+            val buttonText: String? = element.key
             val button = Button(context)
+
             button.setId(iter + 1)
             val params = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
              )
-                    params.setMargins(50, 10, 50, 10)
-                    button.setText("Sw: $buttonText")
-                    button.setPadding(50, 20, 50, 20)
+            params.setMargins(10, 10, 10, 10)
+            button.setText("Sw: $buttonText")
+            button.setPadding(20, 20, 20, 20)
 
-                    button.setOnClickListener {
-                        Toast.makeText(context, "Nacisnieto przycisk $buttonText", Toast.LENGTH_SHORT).show()
-                        //getNodeInfo(buttonText)
-                        //createSwitchControl()
-                    }
-                    button.setLayoutParams(params)
+            button.setOnClickListener {
+                Toast.makeText(context, "Nacisnieto przycisk $buttonText", Toast.LENGTH_SHORT).show()
+                serializeJson(element.key)
+                //getNodeInfo(buttonText)
+                //createSwitchControl()
+            }
+            button.setLayoutParams(params)
 
-                    if (linear_SwitchList != null) {
-                        linear_SwitchList.addView(button)
-                    }
+
+            if (linear_SwitchList != null)
+            {
+                linear_SwitchList.addView(button)
+            }
 
             iter+=1
         }
+
+    }
+
+
+    fun serializeJson(_pressId: String = "Switch0")
+    {
+        val _message = getMsg()
+        val mapper = jacksonObjectMapper()
+        mapper.configure( DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true )
+
+        val RootData: RootData = mapper.readValue<RootData>("""$_message""")
+
+        val switchlistResponse : List<switchData> = RootData.switchData // Odczytanie obiektu Switchy
+
+
+        for(element in switchlistResponse) {//iteracja po switchach i edycja wartości
+            if(_pressId == element.key ) element.value = element.value xor 1
+        }
+
+        val NodeResponse = nodeData(RootData.nodeData.nodeId, 9999)
+
+        val WholeJsonResponse = RootData(NodeResponse,switchlistResponse as MutableList<switchData>)// Tworzę całą odpowiedź
+        println(WholeJsonResponse)
+
+        println(mapper.writeValueAsString(WholeJsonResponse))
+
+
+        val topic_to = "painlessMesh/to/" + RootData.nodeData.nodeId
+        val _messageSending = mapper.writeValueAsString(WholeJsonResponse)
+        MqttClient.publish(topic_to,
+            _messageSending,
+            2,
+            false,
+            object : IMqttActionListener {
+                override fun onSuccess(asyncActionToken: IMqttToken?) {
+
+                    setMsg(_messageSending)//Zapamietanie co sie zmienilo
+                    val msg = "Publish message: $_message to topic: $topic_to"
+                    Log.d(this.javaClass.name, msg)
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onFailure(
+                    asyncActionToken: IMqttToken?,
+                    exception: Throwable?
+                ) {
+                    Log.d(this.javaClass.name, "Failed to publish message to topic")
+                }
+            })
 
 
 
 
     }
-
-
-
 
 }
