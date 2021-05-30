@@ -1,5 +1,6 @@
 package com.example.smarthomemqtt
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -10,9 +11,11 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -81,6 +84,38 @@ class NodeSelection : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (MqttClient.isConnected()) {
+                    // Disconnect from MQTT Broker
+                    MqttClient.disconnect(object : IMqttActionListener {
+                        override fun onSuccess(asyncActionToken: IMqttToken?) {
+                            Log.d(this.javaClass.name, "Disconnected")
+
+                            Toast.makeText(
+                                context,
+                                "MQTT Disconnection success",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            // Disconnection success, come back to Connect Fragment
+                            findNavController().navigate(R.id.action_NodeSelection_to_ConnectFragment)
+                        }
+
+                        override fun onFailure(
+                            asyncActionToken: IMqttToken?,
+                            exception: Throwable?
+                        ) {
+                            Log.d(this.javaClass.name, "Failed to disconnect")
+                        }
+                    })
+                } else {
+                    Log.d(this.javaClass.name, "Impossible to disconnect, no server connected")
+                }
+            }
+        })
+
+
 
     }
 
@@ -103,6 +138,7 @@ class NodeSelection : Fragment() {
         val _nodeslist: ArrayList<String?> =
             arguments?.getStringArrayList(MQTT_NODES_KEY) as ArrayList<String?>
 
+        _nodeslist.removeAt(0) //Znikanie tego węzła rootwego z widoku przelaczników. Ale moznaby zrobić żeby zwracał topologie np.
         val linear_layoutButton = view.findViewById<LinearLayout>(R.id.linear_layoutButton)
         setView(view)
         //val linear_layoutButton = requireView().findViewById<LinearLayout>(R.id.linear_layoutButton)
@@ -236,6 +272,7 @@ class NodeSelection : Fragment() {
     fun deserializeJson(_message: String)
     {
         val linear_SwitchList = view?.findViewById<LinearLayout>(R.id.linear_SwitchList)
+
         var iter: Int = 0
         val view: (NodeSelection) -> View? = NodeSelection::getView
         //val json3  = """{"NodeData":{"nodeId":3186720073,"time":12},"SwitchData":[{"key":"Switch0","value":1},{"key":"Switch1","value":1},{"key":"Switch2","value":1},{"key":"Switch3","value":1}]}"""
@@ -245,13 +282,19 @@ class NodeSelection : Fragment() {
         val RootData: RootData = mapper.readValue<RootData>("""$_message""")
 
         println(RootData.nodeData)//Odczytanie wartości Node'a
-        if(RootData.nodeData != null)
-        {
-            setMsg(_message)
-        }
 
+        setMsg(_message)//Tu trzeba jakis warunek na zapamietywanie tylko jeśli odpowiedź jest git
 
         val switchlist : List<switchData> = RootData.switchData // Odczytanie obiektu Switchy
+
+        if(switchlist.isNotEmpty())//Sprawdzenie czy lista nie pusta bo jak nie pusta to nie chcemy generować za dużo przycisków
+        {
+            if (linear_SwitchList != null)
+            {
+                linear_SwitchList.removeAllViews()
+            }
+
+        }
         for(element in switchlist){//iteracja po switchach i odczytanie ich wartości
 
             println(element)
@@ -268,9 +311,21 @@ class NodeSelection : Fragment() {
             button.setText("Sw: $buttonText")
             button.setPadding(20, 20, 20, 20)
 
+            if(element.value == 1)
+            {
+                button.setBackgroundColor(Color.RED)
+            }
+            else
+            {
+                button.setBackgroundColor(Color.GREEN)
+            }
+
+
+
             button.setOnClickListener {
-                Toast.makeText(context, "Nacisnieto przycisk $buttonText", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context, "Nacisnieto przycisk $buttonText", Toast.LENGTH_SHORT).show()
                 serializeJson(element.key)
+                //button.setBackgroundColor(Color.GREEN)//Jakies statusowanie w zależoności od statusu przycisku : https://stackoverflow.com/questions/6615723/getting-child-elements-from-linearlayout
                 //getNodeInfo(buttonText)
                 //createSwitchControl()
             }
@@ -333,7 +388,6 @@ class NodeSelection : Fragment() {
                     Log.d(this.javaClass.name, "Failed to publish message to topic")
                 }
             })
-
 
 
 

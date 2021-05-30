@@ -35,6 +35,9 @@
         android:label="NodeSelection"
         tools:layout="@layout/fragment_node_selection">
 
+        <action
+            android:id="@+id/action_NodeSelection_to_ConnectFragment"
+            app:destination="@id/ConnectFragment" />
     </fragment>
 
 
