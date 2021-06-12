@@ -47,7 +47,7 @@ data class switchData(
     var value: Int
 )
 
-
+lateinit var MqttClient: MQTTClient
 class NodeSelection : Fragment()  {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -119,17 +119,100 @@ class NodeSelection : Fragment()  {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val myView  = inflater.inflate(R.layout.fragment_node_selection, container, false) as ConstraintLayout
-        createSwitchControl()// Callback i obsługa otrzymywanych wiadomości
+        createConnection()//Przeniesione z ManageFragment
+        //createSwitchControl()// Callback i obsługa otrzymywanych wiadomości
         return myView
 
     }
 
+    fun createConnection()
+    {
+        val serverUrl = arguments?.getString(MQTT_SERVER_URI_KEY)
+        val clientId = arguments?.getString(MQTT_CLIENT_ID_KEY)
+        val username = ""
+        val pwd = ""
+
+        // Check if passed arguments are valid
+        if (serverUrl != null &&
+            clientId != null &&
+            username != null &&
+            pwd != null
+        ) {
+            // Open MQTT Broker communication
+            MqttClient = MQTTClient(context, serverUrl, clientId)
+
+            // Connect and login to MQTT Broker
+            MqttClient.connect(username,
+                pwd,
+                object : IMqttActionListener {
+                    override fun onSuccess(asyncActionToken: IMqttToken?) {
+                        Log.d(this.javaClass.name, "Connection success")
+
+                        Toast.makeText(
+                            context,
+                            "MQTT Connection success",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        getNodesMQTTGateway()
+                    }
+
+                    override fun onFailure(
+                        asyncActionToken: IMqttToken?,
+                        exception: Throwable?
+                    ) {
+                        Log.d(
+                            this.javaClass.name,
+                            "Connection failure: ${exception.toString()}"
+                        )
+
+                        Toast.makeText(
+                            context,
+                            "MQTT Connection fails: ${exception.toString()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        // Come back to Connect Fragment
+                        findNavController().navigate(R.id.action_ManageFragment_to_ConnectFragment)
+                    }
+                },
+                object : MqttCallback {
+                    override fun messageArrived(topic: String?, message: MqttMessage?) {
+                        val msg =
+                            "Receive message: ${message.toString()} from topic: $topic"
+                        Log.d(this.javaClass.name, msg)
+
+                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                        //tutaj dodajemy obsługe JSONA otrzymanego-----------------------------------//
+                        handleMessages(message.toString(),topic.toString())
+                        //convert()
+
+                    }
+
+                    override fun connectionLost(cause: Throwable?) {
+                        Log.d(this.javaClass.name, "Connection lost ${cause.toString()}")
+                    }
+
+                    override fun deliveryComplete(token: IMqttDeliveryToken?) {
+                        Log.d(this.javaClass.name, "Delivery complete")
+                    }
+//                            override fun connectComplete(reconnect: Boolean?, serverURI: String?) {
+//                                getNodesMQTTGateway()
+//                            }
+                })
+
+
+        } else {
+            // Arguments are not valid, come back to Connect Fragment
+            findNavController().navigate(R.id.action_ManageFragment_to_ConnectFragment)
+        }
+
+
+    }
+
+
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean { //https://stackoverflow.com/questions/8308695/how-to-add-options-menu-to-fragment-in-android
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> true
 
@@ -156,13 +239,9 @@ class NodeSelection : Fragment()  {
                 linear_layoutButton.removeAllViews()
             }
         }
-
-
         _RootNode = _nodeslist.get(0).toString()
         _nodeslist.removeAt(0) //Znikanie tego węzła rootwego z widoku przelaczników. Ale moznaby zrobić żeby zwracał topologie np.
-
         setView(view)
-        //val linear_layoutButton = requireView().findViewById<LinearLayout>(R.id.linear_layoutButton)
 
         for (element in (_nodeslist.indices))//iteracja po switchach i odczytanie ich wartości
         {
@@ -225,13 +304,7 @@ class NodeSelection : Fragment()  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        val _RootNode: String
-        val _nodeslist: ArrayList<String?> =
-            arguments?.getStringArrayList(MQTT_NODES_KEY) as ArrayList<String?>
         setView(view)
-
-        CreateNodeControl(_nodeslist)
-
     }
 
     fun createSwitchControl(){
@@ -250,7 +323,7 @@ class NodeSelection : Fragment()  {
         })
     }
 
-    public fun handleMessages(_message: String, _topic: String)// Obsługa zdarzeń na podstawie otrzymanej wiadomości
+    fun handleMessages(_message: String, _topic: String)// Obsługa zdarzeń na podstawie otrzymanej wiadomości
     {
         if(_topic == "painlessMesh/from/gateway")
         {//tutaj przejście do next ekranu z parametrami nodeów przekazywanymi, przygotowanie w pętli do przekzania SETA
@@ -258,18 +331,12 @@ class NodeSelection : Fragment()  {
             val _nodeslist: List<String> = _message.split(" ")
             val nodesData =  ArrayList(_nodeslist)
             CreateNodeControl(nodesData)
-
         }
         else
         {
             deserializeJson(_message.toString())
-
         }
-
     }
-
-
-
 
 
     fun getNodeInfo(nodeId: String?,_message: String = "getSwitchStatus" ) {

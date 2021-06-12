@@ -40,7 +40,8 @@ class ConnectFragment : Fragment() {
             val mqttCredentials = bundleOf(MQTT_SERVER_URI_KEY to serverURLTextEdit,
                                                   MQTT_CLIENT_ID_KEY  to clientIDTextEdit)
 
-            findNavController().navigate(R.id.action_ConnectFragment_to_ManageFragment,mqttCredentials )
+            //findNavController().navigate(R.id.action_ConnectFragment_to_ManageFragment,mqttCredentials ) //Refactor kodu
+            findNavController().navigate(R.id.action_ConnectFragment_to_NodeSelection,mqttCredentials )
         }
 
     }
