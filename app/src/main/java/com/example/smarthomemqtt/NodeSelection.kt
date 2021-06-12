@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -114,17 +115,13 @@ class NodeSelection : Fragment()  {
     }
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
         val myView  = inflater.inflate(R.layout.fragment_node_selection, container, false) as ConstraintLayout
-
         createSwitchControl()// Callback i obsługa otrzymywanych wiadomości
-
-
         return myView
 
     }
@@ -140,19 +137,30 @@ class NodeSelection : Fragment()  {
                 getNodesMQTTGateway()
                 true
             }
-
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+
 
     fun CreateNodeControl(_nodeslist: ArrayList<String?>)
     {
         val _RootNode: String
         val view: View = getView2()
+        val linear_layoutButton = view.findViewById<LinearLayout>(R.id.linear_layoutButton)
+        //Koniecznośc wyczyszczenia layoutu urzadzen po odświeżeniu
+        if(_nodeslist.isNotEmpty())//Sprawdzenie czy lista nie pusta bo jak nie pusta to nie chcemy generować za dużo przycisków
+        {
+            if (linear_layoutButton != null)
+            {
+                linear_layoutButton.removeAllViews()
+            }
+        }
+
 
         _RootNode = _nodeslist.get(0).toString()
         _nodeslist.removeAt(0) //Znikanie tego węzła rootwego z widoku przelaczników. Ale moznaby zrobić żeby zwracał topologie np.
-        val linear_layoutButton = view.findViewById<LinearLayout>(R.id.linear_layoutButton)
+
         setView(view)
         //val linear_layoutButton = requireView().findViewById<LinearLayout>(R.id.linear_layoutButton)
 
@@ -221,6 +229,7 @@ class NodeSelection : Fragment()  {
         val _nodeslist: ArrayList<String?> =
             arguments?.getStringArrayList(MQTT_NODES_KEY) as ArrayList<String?>
         setView(view)
+
         CreateNodeControl(_nodeslist)
 
     }
@@ -229,17 +238,7 @@ class NodeSelection : Fragment()  {
         val mqttClient = MqttClient.getmqttClient()
         mqttClient.setCallback(object : MqttCallback {
             override fun messageArrived(topic: String?, message: MqttMessage?) {
-                //val msg = "Dupa1234"
-                //Log.d(this.javaClass.name, msg)
-                //oast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-
-
-
-                deserializeJson(message.toString())
-
-                //tutaj dodajemy obsługe JSONA otrzymanego-----------------------------------//
-                //handleMessages(message.toString(),topic.toString())
-                //convert()
+                handleMessages(message.toString(),topic.toString())
             }
             override fun connectionLost(cause: Throwable?) {
                 Log.d(this.javaClass.name, "Connection lost ${cause.toString()}")
@@ -248,11 +247,29 @@ class NodeSelection : Fragment()  {
             override fun deliveryComplete(token: IMqttDeliveryToken?) {
                 Log.d(this.javaClass.name, "Delivery complete")
             }
-//                            override fun connectComplete(reconnect: Boolean?, serverURI: String?) {
-//                                getNodesMQTTGateway()
-//                            }
         })
     }
+
+    public fun handleMessages(_message: String, _topic: String)// Obsługa zdarzeń na podstawie otrzymanej wiadomości
+    {
+        if(_topic == "painlessMesh/from/gateway")
+        {//tutaj przejście do next ekranu z parametrami nodeów przekazywanymi, przygotowanie w pętli do przekzania SETA
+
+            val _nodeslist: List<String> = _message.split(" ")
+            val nodesData =  ArrayList(_nodeslist)
+            CreateNodeControl(nodesData)
+
+        }
+        else
+        {
+            deserializeJson(_message.toString())
+
+        }
+
+    }
+
+
+
 
 
     fun getNodeInfo(nodeId: String?,_message: String = "getSwitchStatus" ) {
@@ -331,9 +348,7 @@ class NodeSelection : Fragment()  {
         //val json3  = """{"NodeData":{"nodeId":3186720073,"time":12},"SwitchData":[{"key":"Switch0","value":1},{"key":"Switch1","value":1},{"key":"Switch2","value":1},{"key":"Switch3","value":1}]}"""
         val mapper = jacksonObjectMapper()
         mapper.configure( DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true )
-
         val RootData: RootData = mapper.readValue<RootData>("""$_message""")
-
         println(RootData.nodeData)//Odczytanie wartości Node'a
 
         setMsg(_message)//Tu trzeba jakis warunek na zapamietywanie tylko jeśli odpowiedź jest git
