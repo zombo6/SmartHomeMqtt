@@ -12,23 +12,7 @@
         tools:layout="@layout/fragment_connect">
 
         <action
-            android:id="@+id/action_ConnectFragment_to_ManageFragment"
-            app:destination="@id/ManageFragment" />
-        <action
             android:id="@+id/action_ConnectFragment_to_NodeSelection"
-            app:destination="@id/NodeSelection" />
-    </fragment>
-    <fragment
-        android:id="@+id/ManageFragment"
-        android:name="com.example.smarthomemqtt.ManageFragment"
-        android:label="Manage Fragment"
-        tools:layout="@layout/fragment_manage">
-
-        <action
-            android:id="@+id/action_ManageFragment_to_ConnectFragment"
-            app:destination="@id/ConnectFragment" />
-        <action
-            android:id="@+id/action_ManageFragment_to_NodeSelection"
             app:destination="@id/NodeSelection" />
     </fragment>
 

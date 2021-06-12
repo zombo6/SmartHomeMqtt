@@ -48,6 +48,7 @@ data class switchData(
 )
 
 lateinit var MqttClient: MQTTClient
+var DEBUG_EN: Boolean = false
 class NodeSelection : Fragment()  {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -173,7 +174,7 @@ class NodeSelection : Fragment()  {
                         ).show()
 
                         // Come back to Connect Fragment
-                        findNavController().navigate(R.id.action_ManageFragment_to_ConnectFragment)
+                        findNavController().navigate(R.id.action_NodeSelection_to_ConnectFragment)
                     }
                 },
                 object : MqttCallback {
@@ -182,7 +183,7 @@ class NodeSelection : Fragment()  {
                             "Receive message: ${message.toString()} from topic: $topic"
                         Log.d(this.javaClass.name, msg)
 
-                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
                         //tutaj dodajemy obsługe JSONA otrzymanego-----------------------------------//
                         handleMessages(message.toString(),topic.toString())
                         //convert()
@@ -196,15 +197,12 @@ class NodeSelection : Fragment()  {
                     override fun deliveryComplete(token: IMqttDeliveryToken?) {
                         Log.d(this.javaClass.name, "Delivery complete")
                     }
-//                            override fun connectComplete(reconnect: Boolean?, serverURI: String?) {
-//                                getNodesMQTTGateway()
-//                            }
                 })
 
 
         } else {
             // Arguments are not valid, come back to Connect Fragment
-            findNavController().navigate(R.id.action_ManageFragment_to_ConnectFragment)
+            findNavController().navigate(R.id.action_NodeSelection_to_ConnectFragment)
         }
 
 
@@ -218,6 +216,7 @@ class NodeSelection : Fragment()  {
 
             R.id.action_refresh-> {
                 getNodesMQTTGateway()
+                Toast.makeText(context, "Refreshing nodelist", Toast.LENGTH_SHORT).show()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -330,7 +329,14 @@ class NodeSelection : Fragment()  {
 
             val _nodeslist: List<String> = _message.split(" ")
             val nodesData =  ArrayList(_nodeslist)
-            CreateNodeControl(nodesData)
+            if(_message != "Client not connected!" && !_message.contains("subs"))
+            {
+                CreateNodeControl(nodesData)
+            }
+            else
+            {
+                Toast.makeText(context, "Please refresh. Mesh not initialized", Toast.LENGTH_SHORT).show()
+            }
         }
         else
         {
@@ -350,7 +356,10 @@ class NodeSelection : Fragment()  {
                     override fun onSuccess(asyncActionToken: IMqttToken?) {
                         val msg = "Subscribed to node, $topic_from trying node info: "
                         Log.d(this.javaClass.name, msg)
-                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                        if(DEBUG_EN)
+                        {
+                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                        }
                     }
 
                     override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
@@ -367,7 +376,10 @@ class NodeSelection : Fragment()  {
                     override fun onSuccess(asyncActionToken: IMqttToken?) {
                         val msg = "Publish message: $_message to topic: $topic_to"
                         Log.d(this.javaClass.name, msg)
-                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                        if(DEBUG_EN)
+                        {
+                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                        }
                     }
 
                     override fun onFailure(
@@ -513,8 +525,11 @@ class NodeSelection : Fragment()  {
                     setMsg(_messageSending)//Zapamietanie co sie zmienilo
                     val msg = "Publish message: $_message to topic: $topic_to"
                     Log.d(this.javaClass.name, msg)
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                }
+                    if(DEBUG_EN)
+                    {
+                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                    }
+                    }
 
                 override fun onFailure(
                     asyncActionToken: IMqttToken?,
@@ -540,7 +555,10 @@ class NodeSelection : Fragment()  {
                     override fun onSuccess(asyncActionToken: IMqttToken?) {
                         val msg = "Subscribed to gateway, $topic_gateway_from trying to get nodes: "
                         Log.d(this.javaClass.name, msg)
-                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                        if(DEBUG_EN)
+                        {
+                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                        }
                     }
 
                     override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
@@ -558,8 +576,10 @@ class NodeSelection : Fragment()  {
                         val msg =
                             "Publish message: $_messgageGetNodes to topic: $topic_gateway_to"
                         Log.d(this.javaClass.name, msg)
-
+                        if(DEBUG_EN)
+                        {
                         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                        }
                     }
 
                     override fun onFailure(
