@@ -3,24 +3,20 @@ package com.example.smarthomemqtt
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 
 
@@ -51,9 +47,7 @@ data class switchData(
 )
 
 
-
-
-class NodeSelection : Fragment() {
+class NodeSelection : Fragment()  {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -115,7 +109,7 @@ class NodeSelection : Fragment() {
             }
         })
 
-
+        setHasOptionsMenu(true)
 
     }
 
@@ -128,16 +122,35 @@ class NodeSelection : Fragment() {
 
         val myView  = inflater.inflate(R.layout.fragment_node_selection, container, false) as ConstraintLayout
 
+        createSwitchControl()// Callback i obsługa otrzymywanych wiadomości
+
+
         return myView
 
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean { //https://stackoverflow.com/questions/8308695/how-to-add-options-menu-to-fragment-in-android
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return when (item.itemId) {
+            R.id.action_settings -> true
 
-        val _nodeslist: ArrayList<String?> =
-            arguments?.getStringArrayList(MQTT_NODES_KEY) as ArrayList<String?>
+            R.id.action_refresh-> {
+                getNodesMQTTGateway()
+                true
+            }
 
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun CreateNodeControl(_nodeslist: ArrayList<String?>)
+    {
+        val _RootNode: String
+        val view: View = getView2()
+
+        _RootNode = _nodeslist.get(0).toString()
         _nodeslist.removeAt(0) //Znikanie tego węzła rootwego z widoku przelaczników. Ale moznaby zrobić żeby zwracał topologie np.
         val linear_layoutButton = view.findViewById<LinearLayout>(R.id.linear_layoutButton)
         setView(view)
@@ -156,14 +169,15 @@ class NodeSelection : Fragment() {
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 )
-                params.setMargins(50, 30, 50, 20)
+                //params.setMargins(50, 30, 50, 20)
+                params.gravity = 1
                 button.setText("Pobierz status przełączników: $buttonText")
                 button.setPadding(50, 20, 50, 20)
 
                 button.setOnClickListener {
                     //Toast.makeText(context, "Nacisnieto przycisk $buttonText", Toast.LENGTH_SHORT).show()
                     getNodeInfo(buttonText)
-                    createSwitchControl()
+                    //createSwitchControl()
                 }
                 button.setLayoutParams(params)
 
@@ -172,6 +186,43 @@ class NodeSelection : Fragment() {
                 }
             }
         }
+        //Pobierz topologie
+        if(_RootNode != "")
+        {
+            val buttonText: String? = _RootNode
+            val button = Button(context)//
+            button.setId(_nodeslist.size + 1)
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            // params.setMargins(150, 50, 50, 20)
+            params.gravity = 1
+            button.setText("Pobierz Topologie")
+            button.setPadding(20, 20, 50, 20)
+
+            button.setOnClickListener {
+                //Toast.makeText(context, "Nacisnieto przycisk $buttonText", Toast.LENGTH_SHORT).show()
+                getNodeInfo("gateway","getTopology")
+            }
+            button.setLayoutParams(params)
+
+            if (linear_layoutButton != null) {
+                linear_layoutButton.addView(button)
+            }
+        }
+
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+//        val _RootNode: String
+        val _nodeslist: ArrayList<String?> =
+            arguments?.getStringArrayList(MQTT_NODES_KEY) as ArrayList<String?>
+        setView(view)
+        CreateNodeControl(_nodeslist)
+
     }
 
     fun createSwitchControl(){
@@ -181,6 +232,8 @@ class NodeSelection : Fragment() {
                 //val msg = "Dupa1234"
                 //Log.d(this.javaClass.name, msg)
                 //oast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+
+
 
                 deserializeJson(message.toString())
 
@@ -392,5 +445,59 @@ class NodeSelection : Fragment() {
 
 
     }
+
+
+    fun getNodesMQTTGateway() {
+        //tutaj subscribe
+        val topic_gateway_from = "painlessMesh/from/gateway";
+        val topic_gateway_to = "painlessMesh/to/gateway";
+        if (MqttClient.isConnected()) {
+            MqttClient.subscribe(topic_gateway_from,
+                1,
+                object : IMqttActionListener {
+                    override fun onSuccess(asyncActionToken: IMqttToken?) {
+                        val msg = "Subscribed to gateway, $topic_gateway_from trying to get nodes: "
+                        Log.d(this.javaClass.name, msg)
+                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                        Log.d(this.javaClass.name, "Failed to subscribe: $topic_gateway_from")
+                    }
+                })
+
+            val _messgageGetNodes = "getNodes";
+            MqttClient.publish(topic_gateway_to,
+                _messgageGetNodes,
+                1,
+                false,
+                object : IMqttActionListener {
+                    override fun onSuccess(asyncActionToken: IMqttToken?) {
+                        val msg =
+                            "Publish message: $_messgageGetNodes to topic: $topic_gateway_to"
+                        Log.d(this.javaClass.name, msg)
+
+                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onFailure(
+                        asyncActionToken: IMqttToken?,
+                        exception: Throwable?
+                    ) {
+                        Log.d(this.javaClass.name, "Failed to publish message to topic")
+                    }
+                })
+        } else {
+            Log.d(this.javaClass.name, "Impossible to subscribe and publish, no server connected")
+            Toast.makeText(
+                context,
+                "Impossible to subscribe and publish, no server connected",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+    }
+
+
 
 }

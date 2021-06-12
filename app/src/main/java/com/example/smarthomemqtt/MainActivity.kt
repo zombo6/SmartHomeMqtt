@@ -8,12 +8,20 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+
+
+interface MyInterface {
+    fun myAction()
+}
 
 
 class MainActivity : AppCompatActivity() {
@@ -56,6 +64,18 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> true
+
+           // R.id.action_refresh-> {
+//                val nodeSelection = NodeSelection()
+//                var fragmentManager: FragmentManager = supportFragmentManager
+//                var FragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+//                FragmentTransaction.replace(R.id.fragment_container_view_tag,nodeSelection).commitNow()
+//
+//                nodeSelection.getNodeInfo()
+//                var fragment = supportFragmentManager.findFragmentById(R.id.NodeSelection)
+
+               // true
+            //}
             else -> super.onOptionsItemSelected(item)
         }
     }

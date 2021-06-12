@@ -6,151 +6,151 @@
     android:layout_height="match_parent"
     tools:context=".ManageFragment">
 
-    <TextView
-        android:id="@+id/textView_pubtopic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Topic"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <TextView-->
+<!--        android:id="@+id/textView_pubtopic"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Topic"-->
+<!--        android:textSize="16sp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-    <EditText
-        android:id="@+id/edittext_pubtopic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:autofillHints="Topic"
-        android:ems="15"
-        android:hint="topic"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_pubtopic" />
+<!--    <EditText-->
+<!--        android:id="@+id/edittext_pubtopic"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="12dp"-->
+<!--        android:autofillHints="Topic"-->
+<!--        android:ems="15"-->
+<!--        android:hint="topic"-->
+<!--        android:inputType="text"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.494"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textView_pubtopic" />-->
 
-    <TextView
-        android:id="@+id/textview_pubmsg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Message"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edittext_pubtopic" />
+<!--    <TextView-->
+<!--        android:id="@+id/textview_pubmsg"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Message"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/edittext_pubtopic" />-->
 
-    <EditText
-        android:id="@+id/edittext_pubmsg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:autofillHints="Message"
-        android:ems="15"
-        android:hint="Message"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview_pubmsg" />
+<!--    <EditText-->
+<!--        android:id="@+id/edittext_pubmsg"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:autofillHints="Message"-->
+<!--        android:ems="15"-->
+<!--        android:hint="Message"-->
+<!--        android:inputType="text"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textview_pubmsg" />-->
 
-    <Button
-        android:id="@+id/button_publish"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Publish"
-        app:layout_constraintEnd_toEndOf="@+id/edittext_pubmsg"
-        app:layout_constraintStart_toStartOf="@+id/edittext_pubmsg"
-        app:layout_constraintTop_toBottomOf="@+id/edittext_pubmsg" />
-
-
-    <TextView
-        android:id="@+id/textview_subtopic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Topic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_publish" />
+<!--    <Button-->
+<!--        android:id="@+id/button_publish"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Publish"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/edittext_pubmsg"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/edittext_pubmsg"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/edittext_pubmsg" />-->
 
 
-    <EditText
-        android:id="@+id/edittext_subtopic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:autofillHints="Topic"
-        android:ems="15"
-        android:hint="Topic"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview_subtopic" />
-
-    <Button
-        android:id="@+id/button_subscribe"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="Subscribe"
-        app:layout_constraintEnd_toStartOf="@+id/button_unsubscribe"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/edittext_subtopic"
-        app:layout_constraintTop_toBottomOf="@+id/edittext_subtopic" />
-
-    <Button
-        android:id="@+id/button_unsubscribe"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Unsubscribe"
-        app:layout_constraintEnd_toEndOf="@+id/edittext_subtopic"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button_subscribe"
-        app:layout_constraintTop_toBottomOf="@+id/edittext_subtopic" />
+<!--    <TextView-->
+<!--        android:id="@+id/textview_subtopic"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Topic"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/button_publish" />-->
 
 
-    <Button
-        android:id="@+id/button_clean_client"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="75dp"
-        android:layout_marginBottom="16dp"
-        android:text="Clean"
-        app:layout_constraintBottom_toTopOf="@+id/button_prefill_client"
-        app:layout_constraintEnd_toEndOf="@+id/button_unsubscribe"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/button_subscribe"
-        app:layout_constraintTop_toBottomOf="@+id/button_subscribe"
-        app:layout_constraintVertical_bias="1.0" />
+<!--    <EditText-->
+<!--        android:id="@+id/edittext_subtopic"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:autofillHints="Topic"-->
+<!--        android:ems="15"-->
+<!--        android:hint="Topic"-->
+<!--        android:inputType="text"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textview_subtopic" />-->
 
-    <Button
-        android:id="@+id/button_prefill_client"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Prefiil"
-        app:layout_constraintBottom_toTopOf="@+id/button_disconnect"
-        app:layout_constraintEnd_toEndOf="@+id/button_unsubscribe"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/button_subscribe"
-        app:layout_constraintTop_toBottomOf="@+id/button_subscribe"
-        app:layout_constraintVertical_bias="1.0" />
+<!--    <Button-->
+<!--        android:id="@+id/button_subscribe"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:layout_marginRight="16dp"-->
+<!--        android:text="Subscribe"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/button_unsubscribe"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/edittext_subtopic"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/edittext_subtopic" />-->
 
-    <Button
-        android:id="@+id/button_disconnect"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Disconnect"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/button_unsubscribe"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/button_subscribe" />
+<!--    <Button-->
+<!--        android:id="@+id/button_unsubscribe"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Unsubscribe"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/edittext_subtopic"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/button_subscribe"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/edittext_subtopic" />-->
+
+
+<!--    <Button-->
+<!--        android:id="@+id/button_clean_client"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="75dp"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:text="Clean"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/button_prefill_client"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/button_unsubscribe"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/button_subscribe"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/button_subscribe"-->
+<!--        app:layout_constraintVertical_bias="1.0" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/button_prefill_client"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:text="Prefiil"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/button_disconnect"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/button_unsubscribe"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/button_subscribe"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/button_subscribe"-->
+<!--        app:layout_constraintVertical_bias="1.0" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/button_disconnect"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:text="Disconnect"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/button_unsubscribe"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/button_subscribe" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
