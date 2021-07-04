@@ -46,11 +46,6 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-
-//        binding.fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -60,23 +55,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> true
 
-           // R.id.action_refresh-> {
-//                val nodeSelection = NodeSelection()
-//                var fragmentManager: FragmentManager = supportFragmentManager
-//                var FragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-//                FragmentTransaction.replace(R.id.fragment_container_view_tag,nodeSelection).commitNow()
-//
-//                nodeSelection.getNodeInfo()
-//                var fragment = supportFragmentManager.findFragmentById(R.id.NodeSelection)
-
-               // true
-            //}
             else -> super.onOptionsItemSelected(item)
         }
     }
