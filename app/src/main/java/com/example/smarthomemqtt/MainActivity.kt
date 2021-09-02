@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         //binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
-
         /* Check if Internet connection is available */
         if (!isConnected()) {
             Log.d(this.javaClass.name, "Internet connection NOT available")

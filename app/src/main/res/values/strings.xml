@@ -10,9 +10,9 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="mqtt_broker_address">MQTT Broker address</string>
-    <string name="mqtt_broker">MQTT Broker</string>
-    <string name="client_id">Client Id</string>
-    <string name="default_values">Default Values</string>
+    <string name="mqtt_broker">tcp://broker.emqx.io:1883</string>
+    <string name="client_id">Client ID</string>
+    <string name="default_values">DEFAULT VALUE</string>
     <string name="connect">Connect</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

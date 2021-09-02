@@ -32,21 +32,21 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 data class RootData(
-    //@JsonProperty("Node")
     val nodeData: nodeData,
-    //@JsonProperty("Switch")
     val switchData: MutableList<switchData>
 )
 
 data class nodeData(
     val nodeId: Long,
-    val time: Int
+    val time: Long
 )
 data class switchData(
     val key: String,
     var value: Int
 )
 
+val DeviceAcronyms: MutableMap<String, String> = mutableMapOf("3187194449" to "Akwarium", "2830009614" to "Wentylator", "1613741825" to "Pokoj")
+//Przepisanie tego w przyszłosci
 lateinit var MqttClient: MQTTClient
 var DEBUG_EN: Boolean = false
 class NodeSelection : Fragment()  {
@@ -248,7 +248,31 @@ class NodeSelection : Fragment()  {
             println(_nodeslist[element])
             if(_nodeslist[element] != "")
             {
-                val buttonText: String? = _nodeslist[element]
+                val buttonText: String?
+                val buttonId = _nodeslist[element];
+
+                if(DeviceAcronyms.contains(_nodeslist[element]))
+                {
+                    buttonText = DeviceAcronyms.get(_nodeslist[element])
+                }
+                else
+                {
+                    buttonText = _nodeslist[element]
+                }
+
+//                if(_nodeslist[element] == "3187194449") {
+//
+//                    buttonText = "Akwarium";
+//                }
+//                else if(_nodeslist[element] == "2830009614") {
+//
+//                    buttonText = "Wentylator";
+//                }
+//                else if(_nodeslist[element] == "1613741825") {
+//
+//                    buttonText = "Pokoj";
+//                }
+
                 val button = Button(context)//
                 button.setId(element + 1)
                 val params = LinearLayout.LayoutParams(
@@ -262,7 +286,7 @@ class NodeSelection : Fragment()  {
 
                 button.setOnClickListener {
                     //Toast.makeText(context, "Nacisnieto przycisk $buttonText", Toast.LENGTH_SHORT).show()
-                    getNodeInfo(buttonText)
+                    getNodeInfo(buttonId)
                     //createSwitchControl()
                 }
                 button.setLayoutParams(params)
@@ -272,31 +296,31 @@ class NodeSelection : Fragment()  {
                 }
             }
         }
-        //Pobierz topologie
-        if(_RootNode != "")
-        {
-            val buttonText: String? = _RootNode
-            val button = Button(context)//
-            button.setId(_nodeslist.size + 1)
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            // params.setMargins(150, 50, 50, 20)
-            params.gravity = 1
-            button.setText("Pobierz Topologie")
-            button.setPadding(20, 20, 50, 20)
-
-            button.setOnClickListener {
-                //Toast.makeText(context, "Nacisnieto przycisk $buttonText", Toast.LENGTH_SHORT).show()
-                getNodeInfo("gateway","getTopology")
-            }
-            button.setLayoutParams(params)
-
-            if (linear_layoutButton != null) {
-                linear_layoutButton.addView(button)
-            }
-        }
+//        //Pobierz topologie
+//        if(_RootNode != "")
+//        {
+//            val buttonText: String? = _RootNode
+//            val button = Button(context)//
+//            button.setId(_nodeslist.size + 1)
+//            val params = LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.WRAP_CONTENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT
+//            )
+//            // params.setMargins(150, 50, 50, 20)
+//            params.gravity = 1
+//            button.setText("Pobierz Topologie")
+//            button.setPadding(20, 20, 50, 20)
+//
+//            button.setOnClickListener {
+//                //Toast.makeText(context, "Nacisnieto przycisk $buttonText", Toast.LENGTH_SHORT).show()
+//                getNodeInfo("gateway","getTopology")
+//            }
+//            button.setLayoutParams(params)
+//
+//            if (linear_layoutButton != null) {
+//                linear_layoutButton.addView(button)
+//            }
+//        }
 
 
     }
@@ -455,7 +479,7 @@ class NodeSelection : Fragment()  {
                         ViewGroup.LayoutParams.WRAP_CONTENT
              )
             params.setMargins(10, 10, 10, 10)
-            button.setText("Sw: $buttonText")
+            button.setText("$buttonText")
             button.setPadding(20, 20, 20, 20)
 
             if(element.value == 1)
